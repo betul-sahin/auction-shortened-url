@@ -38,5 +38,22 @@ public class UserServiceImpl implements UserService {
         return Optional.of(savedUser);
     }
 
+    @Transactional
+    @Override
+    public UserUrlCreateResponse create(UserUrlCreateRequest request, Long userId) {
 
+        Optional<User> user = userRepository.findById(userId);
+
+        if(user.isPresent()){
+            throw new IllegalStateException("Hata");
+        }
+
+        String shortenedUrl = UUID.randomUUID().toString();
+        UserUrl userUrl = new UserUrl();
+        userUrl.setUser(user.get());
+        userUrl.setOriginalUrl(request.getOriginalUrl());
+        userUrl.setShortendUrl(shortenedUrl);
+
+        return new UserUrlCreateResponse(user.get().getId(), shortenedUrl);
+    }
 }
