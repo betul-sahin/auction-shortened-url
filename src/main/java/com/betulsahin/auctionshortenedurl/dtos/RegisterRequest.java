@@ -1,5 +1,6 @@
 package com.betulsahin.auctionshortenedurl.dtos;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest {
+
     @NotEmpty
     @Size(max=20, min=3, message = "Your username must be between 3 and 20 characters.")
     private String username;
