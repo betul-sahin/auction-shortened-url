@@ -1,6 +1,9 @@
 package com.betulsahin.auctionshortenedurl.services;
 
 import com.betulsahin.auctionshortenedurl.dtos.*;
+import com.betulsahin.auctionshortenedurl.exceptions.UserIsAlreadyExistException;
+import com.betulsahin.auctionshortenedurl.exceptions.UserUrlNotFoundException;
+import com.betulsahin.auctionshortenedurl.mappers.UserMapper;
 import com.betulsahin.auctionshortenedurl.mappers.UserUrlMapper;
 import com.betulsahin.auctionshortenedurl.models.AppUser;
 import com.betulsahin.auctionshortenedurl.models.UserUrl;
@@ -23,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserUrlRepository userUrlRepository;
     private final UserUrlMapper userUrlMapper;
+    private final UserMapper userMapper;
 
     @Transactional
     @Override
@@ -31,12 +35,10 @@ public class UserServiceImpl implements UserService {
                 .findByUsername(request.getUsername());
 
         if(userOptional.isPresent()){
-            throw new IllegalStateException("Hata");
+            throw new UserIsAlreadyExistException("This user is already exist!");
         }
 
-        AppUser newAppUser = new AppUser();
-        newAppUser.setUsername(request.getUsername());
-        newAppUser.setPassword(request.getPassword());
+        AppUser newAppUser = userMapper.map(request);
         AppUser savedAppUser = userRepository.save(newAppUser);
 
         return Optional.of(savedAppUser);
@@ -49,7 +51,7 @@ public class UserServiceImpl implements UserService {
         Optional<AppUser> user = userRepository.findById(userId);
 
         if(user.isPresent()){
-            throw new IllegalStateException("Hata");
+            throw new UserIsAlreadyExistException("This user is already exist!");
         }
 
         String shortenedUrl = UUID.randomUUID().toString();
@@ -96,7 +98,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserUrlDto getShortenedUrlByUserIdAndUrlId(Long userId, Long urlId) {
         UserUrl userUrl = userUrlRepository.findByByUserIdAndUrlId(userId, urlId)
-                .orElseThrow(() -> new RuntimeException("hata"));
+                .orElseThrow(() -> new UserUrlNotFoundException("This user url is not found!"));
 
         return userUrlMapper.mapToDto(userUrl);
     }
