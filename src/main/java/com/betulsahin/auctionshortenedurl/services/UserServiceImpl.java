@@ -19,6 +19,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserUrlRepository userUrlRepository;
 
     @Transactional
     @Override
@@ -55,5 +56,16 @@ public class UserServiceImpl implements UserService {
         userUrl.setShortendUrl(shortenedUrl);
 
         return new UserUrlCreateResponse(user.get().getId(), shortenedUrl);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public String getByOriginalUrl(String originalUrl) {
+        String shortenedUrl = userUrlRepository
+                .findByOriginalUrl(originalUrl)
+                .get()
+                .getShortendUrl();
+
+        return shortenedUrl;
     }
 }

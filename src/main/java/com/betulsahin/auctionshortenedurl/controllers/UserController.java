@@ -42,4 +42,12 @@ public class UserController {
                 userService.create(request, userId),
                 HttpStatus.CREATED);
     }
+
+    @GetMapping("/l/{originalUrl}")
+    public ResponseEntity<String> getByOriginalUrl(@PathVariable String originalUrl){
+
+        return new ResponseEntity<>(
+                userService.getByOriginalUrl(originalUrl),
+                HttpStatus.OK);
+    }
 }
