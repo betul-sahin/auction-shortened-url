@@ -13,9 +13,9 @@ public interface UserUrlRepository extends JpaRepository<UserUrl, Long> {
     Optional<UserUrl> findByOriginalUrl(String originalUrl);
     Optional<UserUrl> findByShortendUrl(String shortendUrl);
 
-    @Query("SELECT uu FROM UserUrl uu WHERE uu.user.id = ?1 AND uu.id = ?2")
+    @Query("SELECT uu FROM UserUrl uu WHERE uu.appUser.id = ?1 AND uu.id = ?2")
     Optional<UserUrl> findByByUserIdAndUrlId(Long userId, Long urlId);
 
-    @Query("SELECT uu FROM UserUrl uu WHERE uu.user.id = ?1")
+    @Query("SELECT uu FROM UserUrl uu WHERE uu.appUser.id = ?1")
     List<UserUrl> findAllByUserId(Long userId);
 }

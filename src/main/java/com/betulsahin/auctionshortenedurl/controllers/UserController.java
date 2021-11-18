@@ -1,8 +1,7 @@
 package com.betulsahin.auctionshortenedurl.controllers;
 
 import com.betulsahin.auctionshortenedurl.dtos.*;
-import com.betulsahin.auctionshortenedurl.models.User;
-import com.betulsahin.auctionshortenedurl.models.UserUrl;
+import com.betulsahin.auctionshortenedurl.models.AppUser;
 import com.betulsahin.auctionshortenedurl.services.abstractions.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<RegisterResponse> signup(@Valid @RequestBody RegisterRequest request){
 
-        Optional<User> userOptional = userService.signup(request);
+        Optional<AppUser> userOptional = userService.signup(request);
         if(!userOptional.isPresent()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

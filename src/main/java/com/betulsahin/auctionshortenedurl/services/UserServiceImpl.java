@@ -2,7 +2,7 @@ package com.betulsahin.auctionshortenedurl.services;
 
 import com.betulsahin.auctionshortenedurl.dtos.*;
 import com.betulsahin.auctionshortenedurl.mappers.UserUrlMapper;
-import com.betulsahin.auctionshortenedurl.models.User;
+import com.betulsahin.auctionshortenedurl.models.AppUser;
 import com.betulsahin.auctionshortenedurl.models.UserUrl;
 import com.betulsahin.auctionshortenedurl.repositories.UserRepository;
 import com.betulsahin.auctionshortenedurl.repositories.UserUrlRepository;
@@ -26,27 +26,27 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> signup(RegisterRequest request) {
-        Optional<User> userOptional = userRepository
+    public Optional<AppUser> signup(RegisterRequest request) {
+        Optional<AppUser> userOptional = userRepository
                 .findByUsername(request.getUsername());
 
         if(userOptional.isPresent()){
             throw new IllegalStateException("Hata");
         }
 
-        User newUser = new User();
-        newUser.setUsername(request.getUsername());
-        newUser.setPassword(request.getPassword());
-        User savedUser = userRepository.save(newUser);
+        AppUser newAppUser = new AppUser();
+        newAppUser.setUsername(request.getUsername());
+        newAppUser.setPassword(request.getPassword());
+        AppUser savedAppUser = userRepository.save(newAppUser);
 
-        return Optional.of(savedUser);
+        return Optional.of(savedAppUser);
     }
 
     @Transactional
     @Override
     public UserUrlCreateResponse create(UserUrlCreateRequest request, Long userId) {
 
-        Optional<User> user = userRepository.findById(userId);
+        Optional<AppUser> user = userRepository.findById(userId);
 
         if(user.isPresent()){
             throw new IllegalStateException("Hata");
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
         String shortenedUrl = UUID.randomUUID().toString();
         UserUrl userUrl = new UserUrl();
-        userUrl.setUser(user.get());
+        userUrl.setAppUser(user.get());
         userUrl.setOriginalUrl(request.getOriginalUrl());
         userUrl.setShortendUrl(shortenedUrl);
 

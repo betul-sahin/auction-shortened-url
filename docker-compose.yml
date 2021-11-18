@@ -1,0 +1,25 @@
+version: '3.1'
+services:
+  backend:
+    container_name: auction-shortened-url-backend
+    image: betulsahinn/auction-shortened-url:latest
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "PostgreSQL"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://PostgreSQL:5432/auctionshortenedurl_db
+      SPRING_DATASOURCE_USERNAME: "compose_postgres"
+      SPRING_DATASOURCE_PASSWORD: "compose_postgres"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
+
+  PostgreSQL:
+    container_name: postgres_db
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=compose_postgres
+      - POSTGRES_USER=compose_postgres
+      - POSTGRES_DB=auctionshortenedurl_db

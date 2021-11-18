@@ -4,6 +4,7 @@ import com.betulsahin.auctionshortenedurl.models.abstractions.AbstractBaseEntity
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -16,5 +17,5 @@ public class UserUrl extends AbstractBaseEntity {
     private String originalUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private AppUser appUser;
 }
