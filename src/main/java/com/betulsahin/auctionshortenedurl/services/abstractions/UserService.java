@@ -10,4 +10,5 @@ public interface UserService {
     Optional<User> signup(RegisterRequest request);
     UserUrlCreateResponse create(UserUrlCreateRequest request, Long userId);
     String getByOriginalUrl(String originalUrl);
+    String getByShortenedUrl(String shortenedUrl);
 }

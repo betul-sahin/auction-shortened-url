@@ -68,4 +68,15 @@ public class UserServiceImpl implements UserService {
 
         return shortenedUrl;
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public String getByShortenedUrl(String shortenedUrl) {
+        String originalUrl = userUrlRepository
+                .findByShortendUrl(shortenedUrl)
+                .get()
+                .getOriginalUrl();
+
+        return originalUrl;
+    }
 }

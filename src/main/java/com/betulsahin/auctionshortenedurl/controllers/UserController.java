@@ -50,4 +50,12 @@ public class UserController {
                 userService.getByOriginalUrl(originalUrl),
                 HttpStatus.OK);
     }
+
+    @GetMapping("/s/{shortenedUrl}")
+    public ResponseEntity<String> getByShortenedUrl(@PathVariable String shortenedUrl){
+
+        return new ResponseEntity<>(
+                userService.getByShortenedUrl(shortenedUrl),
+                HttpStatus.OK);
+    }
 }
