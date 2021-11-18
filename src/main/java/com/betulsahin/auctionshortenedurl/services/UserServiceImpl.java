@@ -1,6 +1,7 @@
 package com.betulsahin.auctionshortenedurl.services;
 
 import com.betulsahin.auctionshortenedurl.dtos.*;
+import com.betulsahin.auctionshortenedurl.mappers.UserUrlMapper;
 import com.betulsahin.auctionshortenedurl.models.User;
 import com.betulsahin.auctionshortenedurl.models.UserUrl;
 import com.betulsahin.auctionshortenedurl.repositories.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserUrlRepository userUrlRepository;
+    private final UserUrlMapper userUrlMapper;
 
     @Transactional
     @Override
@@ -78,5 +81,34 @@ public class UserServiceImpl implements UserService {
                 .getOriginalUrl();
 
         return originalUrl;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<UserUrlDto> getAllByUserId(Long userId) {
+        return userUrlRepository.findAllByUserId(userId)
+                .stream()
+                .map(userUrlMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserUrlDto getShortenedUrlByUserIdAndUrlId(Long userId, Long urlId) {
+        UserUrl userUrl = userUrlRepository.findByByUserIdAndUrlId(userId, urlId)
+                .orElseThrow(() -> new RuntimeException("hata"));
+
+        return userUrlMapper.mapToDto(userUrl);
+    }
+
+    @Transactional
+    @Override
+    public void deleteShortenedUrlByUserIdAndUrlId(Long userId, Long urlId) {
+        Optional<UserUrl> userUrlOptional = userUrlRepository.findByByUserIdAndUrlId(userId, urlId);
+        if(!userUrlOptional.isPresent()){
+            throw new RuntimeException("hata");
+        }
+
+        userUrlRepository.delete(userUrlOptional.get());
     }
 }

@@ -11,4 +11,7 @@ public interface UserService {
     UserUrlCreateResponse create(UserUrlCreateRequest request, Long userId);
     String getByOriginalUrl(String originalUrl);
     String getByShortenedUrl(String shortenedUrl);
+    List<UserUrlDto> getAllByUserId(Long userId);
+    UserUrlDto getShortenedUrlByUserIdAndUrlId(Long userId, Long urlId);
+    void deleteShortenedUrlByUserIdAndUrlId(Long userId, Long urlId);
 }
