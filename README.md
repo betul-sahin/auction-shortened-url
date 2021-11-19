@@ -22,10 +22,7 @@ Run the service by following the steps below.
 
 ### Prerequisites
 You should have Docker to get the project up and running.   
-- [Docker](https://www.docker.com/)  
-
-### Live
-[Auction shortened url backend demo](https://auction-shortened-url-backend.herokuapp.com/)
+- [Docker](https://www.docker.com/)
 
 ### Run the Application
 
@@ -43,10 +40,10 @@ Steps to run the application on Docker.
 <!-- USAGE EXAMPLES -->
 ## Usage :desktop_computer:
 
-- Url shortening service hosted on `http://localhost:8080`  
+- Url shortening service hosted on `https://auction-shortened-url-backend.herokuapp.com`  
 
 ### Swagger UI
-Endpoints : `http://localhost:8080/swagger-ui.html`
+Endpoints : `https://auction-shortened-url-backend.herokuapp.com/swagger-ui.html`
 
 
 ## Contact 📫 
