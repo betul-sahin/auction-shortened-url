@@ -59,7 +59,7 @@ public class UserServiceImplTest {
         // then
         assertAll(
                 () -> assertNotNull(actual),
-                () -> assertEquals(expected, actual),
+                () -> assertEquals(expected, actual.get()),
                 () -> assertEquals(expected.getUsername(), actual.get().getUsername())
         );
     }
