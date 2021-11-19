@@ -24,6 +24,9 @@ Run the service by following the steps below.
 You should have Docker to get the project up and running.   
 - [Docker](https://www.docker.com/)  
 
+### LIVE
+[Auction shortened url backend demo](https://auction-shortened-url-backend.herokuapp.com/)
+
 ### Run the Application
 
 Firstly clone the repo to your local
