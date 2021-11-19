@@ -13,6 +13,8 @@ import com.betulsahin.auctionshortenedurl.repositories.UserRepository;
 import com.betulsahin.auctionshortenedurl.repositories.UserUrlRepository;
 import com.betulsahin.auctionshortenedurl.services.abstractions.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final UserUrlRepository userUrlRepository;
@@ -46,6 +49,8 @@ public class UserServiceImpl implements UserService {
         AppUser newAppUser = userMapper.map(request);
         AppUser savedAppUser = userRepository.save(newAppUser);
 
+        LOGGER.info("Registered new user {}", savedAppUser);
+
         return Optional.of(savedAppUser);
     }
 
@@ -59,6 +64,8 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("This user is not found!");
         }
 
+        LOGGER.info("The user found with given userId {}", userId);
+
         String shortenedUrl = UUID.randomUUID().toString();
 
         UserUrl userUrl = new UserUrl();
@@ -66,6 +73,8 @@ public class UserServiceImpl implements UserService {
         userUrl.setOriginalUrl(request.getOriginalUrl());
         userUrl.setShortenedUrl(shortenedUrl);
         userUrlRepository.save(userUrl);
+
+        LOGGER.info("The shortened Url saved to urls of given user {}", userUrl.toString());
 
         return new UserUrlCreateResponse(user.get().getId(), shortenedUrl);
     }
@@ -80,12 +89,15 @@ public class UserServiceImpl implements UserService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
 
+        LOGGER.info("Located on original url {}", originalUrl.getOriginalUrl());
+
         return httpHeaders;
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<UserUrlDto> getAllByUserId(Long userId) {
+
         return userUrlRepository.findAllByUserId(userId)
                 .stream()
                 .map(userUrlMapper::mapToDto)
@@ -108,6 +120,8 @@ public class UserServiceImpl implements UserService {
         if(!userUrlOptional.isPresent()){
             throw new UserUrlNotFoundException("User url not found!");
         }
+
+        LOGGER.info("Deleted given url {}", userUrlOptional.get().getOriginalUrl());
 
         userUrlRepository.delete(userUrlOptional.get());
     }

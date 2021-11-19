@@ -10,6 +10,7 @@ This is url shortening service. It is a Restfull application which written using
 - [Swagger](https://swagger.io/) - Easy implementation and widespread use
 - [Docker](https://www.docker.com/)      
 - Unit Test
+- Slf4j
 
 ## Business Rules :pushpin:
 - The user creates a membership.  
