@@ -3,6 +3,7 @@ package com.betulsahin.auctionshortenedurl.services;
 import com.betulsahin.auctionshortenedurl.dtos.*;
 import com.betulsahin.auctionshortenedurl.exceptions.ShortenedUrlNotFoundException;
 import com.betulsahin.auctionshortenedurl.exceptions.UserIsAlreadyExistException;
+import com.betulsahin.auctionshortenedurl.exceptions.UserNotFoundException;
 import com.betulsahin.auctionshortenedurl.exceptions.UserUrlNotFoundException;
 import com.betulsahin.auctionshortenedurl.mappers.UserMapper;
 import com.betulsahin.auctionshortenedurl.mappers.UserUrlMapper;
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService {
         Optional<AppUser> user = userRepository.findById(userId);
 
         if(!user.isPresent()){
-            throw new UserIsAlreadyExistException("This user is not found!");
+            throw new UserNotFoundException("This user is not found!");
         }
 
         String shortenedUrl = UUID.randomUUID().toString();
