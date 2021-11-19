@@ -1,6 +1,7 @@
 package com.betulsahin.auctionshortenedurl.services;
 
 import com.betulsahin.auctionshortenedurl.dtos.*;
+import com.betulsahin.auctionshortenedurl.exceptions.ShortenedUrlNotFoundException;
 import com.betulsahin.auctionshortenedurl.exceptions.UserIsAlreadyExistException;
 import com.betulsahin.auctionshortenedurl.exceptions.UserUrlNotFoundException;
 import com.betulsahin.auctionshortenedurl.mappers.UserMapper;
@@ -11,9 +12,12 @@ import com.betulsahin.auctionshortenedurl.repositories.UserRepository;
 import com.betulsahin.auctionshortenedurl.repositories.UserUrlRepository;
 import com.betulsahin.auctionshortenedurl.services.abstractions.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,39 +54,32 @@ public class UserServiceImpl implements UserService {
 
         Optional<AppUser> user = userRepository.findById(userId);
 
-        if(user.isPresent()){
-            throw new UserIsAlreadyExistException("This user is already exist!");
+        if(!user.isPresent()){
+            throw new UserIsAlreadyExistException("This user is not found!");
         }
 
         String shortenedUrl = UUID.randomUUID().toString();
+
         UserUrl userUrl = new UserUrl();
         userUrl.setAppUser(user.get());
         userUrl.setOriginalUrl(request.getOriginalUrl());
-        userUrl.setShortendUrl(shortenedUrl);
+        userUrl.setShortenedUrl(shortenedUrl);
+        userUrlRepository.save(userUrl);
 
         return new UserUrlCreateResponse(user.get().getId(), shortenedUrl);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public String getByOriginalUrl(String originalUrl) {
-        String shortenedUrl = userUrlRepository
-                .findByOriginalUrl(originalUrl)
-                .get()
-                .getShortendUrl();
+    public HttpHeaders getByShortenedUrl(String shortenedUrl) throws URISyntaxException {
+        UserUrl originalUrl = userUrlRepository.findByShortenedUrl(shortenedUrl)
+                .orElseThrow(() -> new ShortenedUrlNotFoundException("Shortened Url is not found!"));
 
-        return shortenedUrl;
-    }
+        URI uri = new URI(originalUrl.getOriginalUrl());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(uri);
 
-    @Transactional(readOnly = true)
-    @Override
-    public String getByShortenedUrl(String shortenedUrl) {
-        String originalUrl = userUrlRepository
-                .findByShortendUrl(shortenedUrl)
-                .get()
-                .getOriginalUrl();
-
-        return originalUrl;
+        return httpHeaders;
     }
 
     @Transactional(readOnly = true)
@@ -108,7 +105,7 @@ public class UserServiceImpl implements UserService {
     public void deleteShortenedUrlByUserIdAndUrlId(Long userId, Long urlId) {
         Optional<UserUrl> userUrlOptional = userUrlRepository.findByByUserIdAndUrlId(userId, urlId);
         if(!userUrlOptional.isPresent()){
-            throw new RuntimeException("hata");
+            throw new UserUrlNotFoundException("User url not found!");
         }
 
         userUrlRepository.delete(userUrlOptional.get());

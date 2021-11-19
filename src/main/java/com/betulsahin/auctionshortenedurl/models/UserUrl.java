@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @Entity
 public class UserUrl extends AbstractBaseEntity {
-    private String shortendUrl;
+    private String shortenedUrl;
     private String originalUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

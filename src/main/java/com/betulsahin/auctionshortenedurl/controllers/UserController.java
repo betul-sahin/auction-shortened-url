@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,16 +41,8 @@ public class UserController {
                 HttpStatus.CREATED);
     }
 
-    @GetMapping("/l/{originalUrl}")
-    public ResponseEntity<String> getByOriginalUrl(@PathVariable String originalUrl){
-
-        return new ResponseEntity<>(
-                userService.getByOriginalUrl(originalUrl),
-                HttpStatus.OK);
-    }
-
     @GetMapping("/s/{shortenedUrl}")
-    public ResponseEntity<String> getByShortenedUrl(@PathVariable String shortenedUrl){
+    public ResponseEntity<?> getByShortenedUrl(@PathVariable String shortenedUrl) throws URISyntaxException {
 
         return new ResponseEntity<>(
                 userService.getByShortenedUrl(shortenedUrl),
@@ -77,10 +70,14 @@ public class UserController {
     public ResponseEntity<Void> deleteById(@PathVariable Long userId,
                                            @PathVariable Long urlId){
         try{
+
             userService.deleteShortenedUrlByUserIdAndUrlId(userId, urlId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
         }catch (RuntimeException e){
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         }
     }
 }

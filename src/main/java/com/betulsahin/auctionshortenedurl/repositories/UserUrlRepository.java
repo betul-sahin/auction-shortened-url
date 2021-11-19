@@ -10,8 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserUrlRepository extends JpaRepository<UserUrl, Long> {
-    Optional<UserUrl> findByOriginalUrl(String originalUrl);
-    Optional<UserUrl> findByShortendUrl(String shortendUrl);
+    Optional<UserUrl> findByShortenedUrl(String shortenedUrl);
 
     @Query("SELECT uu FROM UserUrl uu WHERE uu.appUser.id = ?1 AND uu.id = ?2")
     Optional<UserUrl> findByByUserIdAndUrlId(Long userId, Long urlId);

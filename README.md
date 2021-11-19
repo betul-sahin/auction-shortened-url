@@ -9,6 +9,7 @@ This is url shortening service. It is a Restfull application which written using
 - [Lombok](https://projectlombok.org/)  - Less boilerplate code
 - [Swagger](https://swagger.io/) - Easy implementation and widespread use
 - [Docker](https://www.docker.com/)      
+- Unit Test
 
 ## Business Rules :pushpin:
 - The user creates a membership.  
